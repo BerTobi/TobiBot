@@ -1,4 +1,4 @@
-CookieClicker = {
+TobiBot = {
 	start: function() {
 		this.clickInterval = setInterval(function(){
 			// Click the large cookie as fast as possible!
