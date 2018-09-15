@@ -6,6 +6,24 @@ TobiBot = {
 			if (Cookies>Buyables['Cursor'].price) {
 		Buyables['Cursor'].Buy();
 		}
+			if (Cookies>Buyables['Grandma'].price) {
+		Buyables['Grandma'].Buy();
+		}
+			if (Cookies>Buyables['Factory'].price) {
+		Buyables['Factory'].Buy();
+		}
+			if (Cookies>Buyables['Mine'].price) {
+		Buyables['Mine'].Buy();
+		}
+			if (Cookies>Buyables['Shipment'].price) {
+		Buyables['Shipment'].Buy();
+		}
+			if (Cookies>Buyables['Alchemy Lab'].price) {
+		Buyables['Alchemy Lab'].Buy();
+		}
+			if (Cookies>Buyables['Portal'].price) {
+		Buyables['Portal'].Buy();
+		}
 		}, 300);
 		
 		
