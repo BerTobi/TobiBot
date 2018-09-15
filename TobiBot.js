@@ -18,8 +18,8 @@ TobiBot = {
 			if (Cookies>Buyables['Shipment'].price) {
 		Buyables['Shipment'].Buy();
 		}
-			if (Cookies>Buyables['Alchemy Lab'].price) {
-		Buyables['Alchemy Lab'].Buy();
+			if (Cookies>Buyables['Alchemy lab'].price) {
+		Buyables['Alchemy lab'].Buy();
 		}
 			if (Cookies>Buyables['Portal'].price) {
 		Buyables['Portal'].Buy();
