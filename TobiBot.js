@@ -1,7 +1,13 @@
-/*Version 0.120 Beta 2 */
-TobiBot = {
+/* Version 0.120 Beta 3 */
+	var btn = document.createElement("startButton");        // Create a <button> element
+	btn.id ='startButton';
+	var t = document.createTextNode("Start");       // Create a text node
+	btn.appendChild(t);                                // Append the text to <button>
+	document.body.appendChild(btn);
+	document.getElementById("startButton").onclick = function() {start()} ;
+
 	
-	start: function() {
+	start=function() {
 		var cursorROI=Buyables['Cursor'].price/0.2;
 		var grandmaROI=Buyables['Grandma'].price/0.8;
 		var factoryROI=Buyables['Factory'].price/4;
@@ -39,22 +45,21 @@ TobiBot = {
 			selectBestROI();
 						if (Cookies>Buyables[selectBestROI()].price){
 				Buyables[selectBestROI()].Buy();
-							cursorROI=Buyables['Cursor'].price/0.2;
-			grandmaROI=Buyables['Grandma'].price/0.8;
-			factoryROI=Buyables['Factory'].price/4;
-			mineROI=Buyables['Mine'].price/12.5;
-			shipmentROI=Buyables['Shipment'].price/20;
-			labROI=Buyables['Alchemy lab'].price/125;
-			portalROI=Buyables['Portal'].price/1332.2;
+					cursorROI=Buyables['Cursor'].price/0.2;
+					grandmaROI=Buyables['Grandma'].price/0.8;
+					factoryROI=Buyables['Factory'].price/4;
+					mineROI=Buyables['Mine'].price/12.5;
+					shipmentROI=Buyables['Shipment'].price/20;
+					labROI=Buyables['Alchemy lab'].price/125;
+					portalROI=Buyables['Portal'].price/1332.2;
 				new Pop('credits','<span style="color:#f00;">Next building:</span>'+selectBestROI());
 				}
 		}, 300);
-		},
+		}
 		
-	stop: function() {
+	stop=function() {
 		clearInterval(this.clickInterval);
 		autobuy=0;
-	},
+	}
 	
 	
-}
