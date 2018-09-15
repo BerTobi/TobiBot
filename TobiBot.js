@@ -39,15 +39,15 @@ TobiBot = {
 			selectBestROI();
 						if (Cookies>Buyables[selectBestROI()].price){
 				Buyables[selectBestROI()].Buy();
-				new Pop('credits','<span style="color:#f00;">Next building:</span>'+selectBestROI());
-				}
-			cursorROI=Buyables['Cursor'].price/0.2;
+							cursorROI=Buyables['Cursor'].price/0.2;
 			grandmaROI=Buyables['Grandma'].price/0.8;
 			factoryROI=Buyables['Factory'].price/4;
 			mineROI=Buyables['Mine'].price/12.5;
 			shipmentROI=Buyables['Shipment'].price/20;
 			labROI=Buyables['Alchemy lab'].price/125;
 			portalROI=Buyables['Portal'].price/1332.2;
+				new Pop('credits','<span style="color:#f00;">Next building:</span>'+selectBestROI());
+				}
 		}, 300);
 		},
 		
