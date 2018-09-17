@@ -1,4 +1,4 @@
-/* Version 0.120 Beta 4 */
+/* Version 0.120 Beta 4 Patch 1 */
 
 	var btn = document.createElement("startButton");        // Create a <button> element
 	btn.id ='startButton';
@@ -18,12 +18,12 @@
 		TobiBotInformation.document.write("<h2>TobiBot Information Window</h2>"+"CpS: "+"<span id="+"showCpS"+">0</span><br />");
 		TobiBotInformation.document.write("Cookies baked all time: "+"<span id="+"CBAT"+">0</span><br />");
 		TobiBotInformation.document.write("Total Buildings: "+"<span id="+"tB"+">0</span><br />");
-		TobiBotInformation.document.write("Next Building: "+"<span id="+"nB"+"></span>");
-		TobiBotInformation.document.write("Time left: "+"<span id="+"tL"+"></span>");
-		TobiBotInformation.document.write("Time left for 1 Million CBAT: "+"<span id="+"tM"+"></span>");
-		TobiBotInformation.document.write("Time left for 1 Billion CBAT: "+"<span id="+"tM2"+"></span>");
-		TobiBotInformation.document.write("Time left for 1 Trillion CBAT: "+"<span id="+"tM3"+"></span>");
-		TobiBotInformation.document.write("<footer>Version 0.120 Beta 4</footer>");
+		TobiBotInformation.document.write("Next Building: "+"<span id="+"nB"+"></span><br />");
+		TobiBotInformation.document.write("Time left: "+"<span id="+"tL"+"></span><br />");
+		TobiBotInformation.document.write("Time left for 1 Million CBAT: "+"<span id="+"tM"+"></span><br />");
+		TobiBotInformation.document.write("Time left for 1 Billion CBAT: "+"<span id="+"tM2"+"></span><br />");
+		TobiBotInformation.document.write("Time left for 1 Trillion CBAT: "+"<span id="+"tM3"+"></span><br />");
+		TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.120 Beta 4</footer>");
 		TobiBotInformation.document.title = "TobiBot Information Window";
 		var cursorROI=Buyables['Cursor'].price/0.2;
 		var grandmaROI=Buyables['Grandma'].price/0.8;
@@ -59,8 +59,10 @@
 				cps = Cursors*0.2 + Grandmas*0.8 + Factories*4 + Mines*12.5 + Shipments*20 + Labs*125 + Portals*1332.2;
 				CBAT = CBAT + cps/3.33;
 				nextB = selectBestROI();
-				timeL = Buyables[selectBestROI()].price/cps;
-				timeM = Math.round(1000000/cps);
+				timeL = (Buyables[selectBestROI()].price-Cookies)/cps;
+				timeM = Math.round((1000000-CBAT)/cps);
+				timeM2 = Math.round((1000000000-CBAT)/cps);
+				timeM3 = Math.round((1000000000000-CBAT)/cps);
 				totalB = Cursors + Grandmas + Factories + Mines + Shipments + Labs + Portals
 				TobiBotInformation.document.getElementById("showCpS").innerHTML = Math.round(cps * 10) / 10;
 				TobiBotInformation.document.getElementById("CBAT").innerHTML = Math.round(CBAT*10) / 10;
@@ -69,18 +71,18 @@
 				TobiBotInformation.document.getElementById("tL").innerHTML = Math.round(timeL);
 				if (CBAT < 1000000){
 				TobiBotInformation.document.getElementById("tM").innerHTML = timeM;
-				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM * 1000;
-				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM * 1000000;				
+				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM2;
+				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM3;				
 				}			
 				if (CBAT > 1000000 && CBAT < 1000000000){
 				TobiBotInformation.document.getElementById("tM").innerHTML = "You already reached 1 million";
-				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM * 1000;
-				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM * 1000000;				
+				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM2;
+				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM3;				
 				}	
 				if (CBAT > 1000000 && CBAT > 1000000000 && CBAT < 1000000000000){
 				TobiBotInformation.document.getElementById("tM").innerHTML = "You already reached 1 million";
 				TobiBotInformation.document.getElementById("tM2").innerHTML = "You already reached 1 billion";
-				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM * 1000000;				
+				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM3;				
 				}	
 				if (CBAT > 1000000 && CBAT > 1000000000 && CBAT < 1000000000000){
 				TobiBotInformation.document.getElementById("tM").innerHTML = "You already reached 1 million";
