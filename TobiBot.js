@@ -1,4 +1,4 @@
-/* Version 0.120 Beta 4 Patch 1 */
+/* Version 0.120 Beta 4 Patch 2 */
 
 	var btn = document.createElement("startButton");        // Create a <button> element
 	btn.id ='startButton';
@@ -7,14 +7,14 @@
 	document.body.appendChild(btn);
 	document.getElementById("startButton").onclick = function() {start()} ;
 	var cps = Cursors*0.2 + Grandmas*0.8 + Factories*4 + Mines*12.5 + Shipments*20 + Labs*125 + Portals*1332.2;
-	var CBAT = 0;
+	var CBAT = Cookies;
 	var totalB = 0;
 	var nextB = "";
 	var timeL = 0;
 	var timeM = 0;
 	
 	start=function() {
-		var TobiBotInformation = window.open("", "MsgWindow", "width=500,height=300,addressbar=no, location=no");
+		var TobiBotInformation = window.open("", "MsgWindow", "width=600,height=300,addressbar=no, location=no");
 		TobiBotInformation.document.write("<h2>TobiBot Information Window</h2>"+"CpS: "+"<span id="+"showCpS"+">0</span><br />");
 		TobiBotInformation.document.write("Cookies baked all time: "+"<span id="+"CBAT"+">0</span><br />");
 		TobiBotInformation.document.write("Total Buildings: "+"<span id="+"tB"+">0</span><br />");
@@ -28,10 +28,36 @@
 		var cursorROI=Buyables['Cursor'].price/0.2;
 		var grandmaROI=Buyables['Grandma'].price/0.8;
 		var factoryROI=Buyables['Factory'].price/4;
-		var mineROI=Buyables['Mine'].price/12.5;
+		var mineROI=Buyables['Mine'].price/10;
 		var shipmentROI=Buyables['Shipment'].price/20;
-		var labROI=Buyables['Alchemy lab'].price/125;
+		var labROI=Buyables['Alchemy lab'].price/100;
 		var portalROI=Buyables['Portal'].price/1332.2;
+	pretiffyTime=function(a){
+		var seconds=0;
+		var minutes=0;
+		var hours=0;
+		var days=0;
+		if (a < 60) {
+			seconds = Math.round(a);
+		}
+		if (a > 60 && a < 3600){
+			seconds=Math.round(a%60);
+			minutes=Math.floor((a%3600)/60);
+		}
+		if (a > 3600 && a < 86400){
+			seconds=Math.round(a%60);
+			minutes=Math.floor((a%3600)/60);
+			hours=Math.floor(((a%86400)/60)/60);
+		}
+		if (a > 86400){
+		seconds=Math.round(a%60);
+		minutes=Math.floor((a%3600)/60);
+		hours=Math.floor(((a%86400)/60)/60);
+		days=Math.floor(a/86400);
+		}
+		var time= days + " days " + hours + " hours " + minutes + " minutes " + seconds + " seconds left";
+		return time;
+	}
 	selectBestROI=function(){
 		if (cursorROI<=grandmaROI && cursorROI<=factoryROI && cursorROI<=mineROI  && cursorROI<=shipmentROI  && cursorROI<=labROI  && cursorROI<=portalROI){
 			return 'Cursor';
@@ -59,16 +85,16 @@
 				cps = Cursors*0.2 + Grandmas*0.8 + Factories*4 + Mines*12.5 + Shipments*20 + Labs*125 + Portals*1332.2;
 				CBAT = CBAT + cps/3.33;
 				nextB = selectBestROI();
-				timeL = (Buyables[selectBestROI()].price-Cookies)/cps;
-				timeM = Math.round((1000000-CBAT)/cps);
-				timeM2 = Math.round((1000000000-CBAT)/cps);
-				timeM3 = Math.round((1000000000000-CBAT)/cps);
+				timeL = pretiffyTime((Buyables[selectBestROI()].price-Cookies)/cps);
+				timeM = pretiffyTime(Math.round((1000000-CBAT)/cps));
+				timeM2 = pretiffyTime(Math.round((1000000000-CBAT)/cps));
+				timeM3 = pretiffyTime(Math.round((1000000000000-CBAT)/cps));
 				totalB = Cursors + Grandmas + Factories + Mines + Shipments + Labs + Portals
 				TobiBotInformation.document.getElementById("showCpS").innerHTML = Math.round(cps * 10) / 10;
 				TobiBotInformation.document.getElementById("CBAT").innerHTML = Math.round(CBAT*10) / 10;
 				TobiBotInformation.document.getElementById("tB").innerHTML = totalB;
 				TobiBotInformation.document.getElementById("nB").innerHTML = nextB;
-				TobiBotInformation.document.getElementById("tL").innerHTML = Math.round(timeL);
+				TobiBotInformation.document.getElementById("tL").innerHTML = timeL;
 				if (CBAT < 1000000){
 				TobiBotInformation.document.getElementById("tM").innerHTML = timeM;
 				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM2;
@@ -84,7 +110,7 @@
 				TobiBotInformation.document.getElementById("tM2").innerHTML = "You already reached 1 billion";
 				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM3;				
 				}	
-				if (CBAT > 1000000 && CBAT > 1000000000 && CBAT < 1000000000000){
+				if (CBAT > 1000000000000){
 				TobiBotInformation.document.getElementById("tM").innerHTML = "You already reached 1 million";
 				TobiBotInformation.document.getElementById("tM2").innerHTML = "You already reached 1 billion";
 				TobiBotInformation.document.getElementById("tM3").innerHTML = "You already reached 1 trillion";				
