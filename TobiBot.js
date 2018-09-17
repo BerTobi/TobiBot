@@ -1,13 +1,24 @@
-/* Version 0.120 Beta 3 */
+/* Version 0.120 Beta 4 */
+
 	var btn = document.createElement("startButton");        // Create a <button> element
 	btn.id ='startButton';
 	var t = document.createTextNode("Start");       // Create a text node
 	btn.appendChild(t);                                // Append the text to <button>
 	document.body.appendChild(btn);
 	document.getElementById("startButton").onclick = function() {start()} ;
-
+	var cps = Cursors*0.2 + Grandmas*0.8 + Factories*4 + Mines*12.5 + Shipments*20 + Labs*125 + Portals*1332.2;
+	var CBAT = 0;
+	var totalB = 0;
+	var nextB = "";
 	
 	start=function() {
+		var TobiBotInformation = window.open("", "MsgWindow", "width=500,height=200,addressbar=no, location=no");
+		TobiBotInformation.document.write("<h2>TobiBot Information Window</h2>"+"CpS: "+"<span id="+"showCpS"+">0</span><br />");
+		TobiBotInformation.document.write("Cookies baked all time: "+"<span id="+"CBAT"+">0</span><br />");
+		TobiBotInformation.document.write("Total Buildings: "+"<span id="+"tB"+">0</span><br />");
+		TobiBotInformation.document.write("Next Building: "+"<span id="+"nB"+"></span>");
+		TobiBotInformation.document.write("<footer>Version 0.120 Beta 4</footer>");
+		TobiBotInformation.document.title = "TobiBot Information Window";
 		var cursorROI=Buyables['Cursor'].price/0.2;
 		var grandmaROI=Buyables['Grandma'].price/0.8;
 		var factoryROI=Buyables['Factory'].price/4;
@@ -38,13 +49,26 @@
 			return 'Portal';
 		}
 	}
+	updateInformationWindow=function(){
+				cps = Cursors*0.2 + Grandmas*0.8 + Factories*4 + Mines*12.5 + Shipments*20 + Labs*125 + Portals*1332.2;
+				CBAT = CBAT + cps/3.33;
+				nextB = selectBestROI();
+				totalB = Cursors + Grandmas + Factories + Mines + Shipments + Labs + Portals
+				TobiBotInformation.document.getElementById("showCpS").innerHTML = Math.round(cps * 10) / 10;
+				TobiBotInformation.document.getElementById("CBAT").innerHTML = Math.round(CBAT*10) / 10;
+				TobiBotInformation.document.getElementById("tB").innerHTML = totalB;
+				TobiBotInformation.document.getElementById("nB").innerHTML = nextB;	
+				TobiBotInformation.document.title = "TobiBot Information Window";
+	}
 		var autobuy=1;
 		this.clickInterval = setInterval(function(){
 			// Click the large cookie as fast as possible!
+			
 			ClickCookie();
+			CBAT++;
 			selectBestROI();
-						if (Cookies>Buyables[selectBestROI()].price){
-				Buyables[selectBestROI()].Buy();
+					if (Cookies>Buyables[selectBestROI()].price){
+					Buyables[selectBestROI()].Buy();
 					cursorROI=Buyables['Cursor'].price/0.2;
 					grandmaROI=Buyables['Grandma'].price/0.8;
 					factoryROI=Buyables['Factory'].price/4;
@@ -54,6 +78,7 @@
 					portalROI=Buyables['Portal'].price/1332.2;
 				new Pop('credits','<span style="color:#f00;">Next building:</span>'+selectBestROI());
 				}
+			updateInformationWindow();	
 		}, 300);
 		}
 		
