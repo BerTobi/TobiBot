@@ -1,4 +1,4 @@
-/* Version 0.120 Beta 4 Patch 2 */
+/* Version 0.120 */
 
 	var btn = document.createElement("startButton");        // Create a <button> element
 	btn.id ='startButton';
@@ -12,6 +12,9 @@
 	var nextB = "";
 	var timeL = 0;
 	var timeM = 0;
+	var M1;
+	var M2;
+	var M3;
 	
 	start=function() {
 		var TobiBotInformation = window.open("", "MsgWindow", "width=600,height=300,addressbar=no, location=no");
@@ -20,10 +23,10 @@
 		TobiBotInformation.document.write("Total Buildings: "+"<span id="+"tB"+">0</span><br />");
 		TobiBotInformation.document.write("Next Building: "+"<span id="+"nB"+"></span><br />");
 		TobiBotInformation.document.write("Time left: "+"<span id="+"tL"+"></span><br />");
-		TobiBotInformation.document.write("Time left for 1 Million CBAT: "+"<span id="+"tM"+"></span><br />");
-		TobiBotInformation.document.write("Time left for 1 Billion CBAT: "+"<span id="+"tM2"+"></span><br />");
-		TobiBotInformation.document.write("Time left for 1 Trillion CBAT: "+"<span id="+"tM3"+"></span><br />");
-		TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.120 Beta 4</footer>");
+		TobiBotInformation.document.write("Time left for 1 <span id="+"M1"+"></span>"+" CBAT: "+"<span id="+"tM"+"></span><br />");
+		TobiBotInformation.document.write("Time left for 1 <span id="+"M2"+"></span>"+" CBAT: "+"<span id="+"tM2"+"></span><br />");
+		TobiBotInformation.document.write("Time left for 1 <span id="+"M3"+"></span>"+" CBAT: "+"<span id="+"tM3"+"></span><br />");
+		TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.120</footer>");
 		TobiBotInformation.document.title = "TobiBot Information Window";
 		var cursorROI=Buyables['Cursor'].price/0.2;
 		var grandmaROI=Buyables['Grandma'].price/0.8;
@@ -86,34 +89,59 @@
 				CBAT = CBAT + cps/3.33;
 				nextB = selectBestROI();
 				timeL = pretiffyTime((Buyables[selectBestROI()].price-Cookies)/cps);
-				timeM = pretiffyTime(Math.round((1000000-CBAT)/cps));
-				timeM2 = pretiffyTime(Math.round((1000000000-CBAT)/cps));
-				timeM3 = pretiffyTime(Math.round((1000000000000-CBAT)/cps));
+				
 				totalB = Cursors + Grandmas + Factories + Mines + Shipments + Labs + Portals
 				TobiBotInformation.document.getElementById("showCpS").innerHTML = Math.round(cps * 10) / 10;
 				TobiBotInformation.document.getElementById("CBAT").innerHTML = Math.round(CBAT*10) / 10;
 				TobiBotInformation.document.getElementById("tB").innerHTML = totalB;
 				TobiBotInformation.document.getElementById("nB").innerHTML = nextB;
 				TobiBotInformation.document.getElementById("tL").innerHTML = timeL;
+				TobiBotInformation.document.getElementById("M1").innerHTML = M1;
+				TobiBotInformation.document.getElementById("M2").innerHTML = M2;
+				TobiBotInformation.document.getElementById("M3").innerHTML = M3;
 				if (CBAT < 1000000){
+				timeM = pretiffyTime(Math.round((1000000-CBAT)/cps));
+				timeM2 = pretiffyTime(Math.round((1000000000-CBAT)/cps));
+				timeM3 = pretiffyTime(Math.round((1000000000000-CBAT)/cps));
+				M1 = "Million";
+				M2 = "Billion";
+				M3 = "Trillion";
 				TobiBotInformation.document.getElementById("tM").innerHTML = timeM;
 				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM2;
 				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM3;				
 				}			
 				if (CBAT > 1000000 && CBAT < 1000000000){
-				TobiBotInformation.document.getElementById("tM").innerHTML = "You already reached 1 million";
+				timeM = pretiffyTime(Math.round((1000000000-CBAT)/cps));
+				timeM2 = pretiffyTime(Math.round((1000000000000-CBAT)/cps));
+				timeM3 = pretiffyTime(Math.round((1000000000000000-CBAT)/cps));
+				M1 = "Billion";
+				M2 = "Trillion";
+				M3 = "Quadrillion";	
+				TobiBotInformation.document.getElementById("tM").innerHTML = timeM;
 				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM2;
 				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM3;				
 				}	
 				if (CBAT > 1000000 && CBAT > 1000000000 && CBAT < 1000000000000){
-				TobiBotInformation.document.getElementById("tM").innerHTML = "You already reached 1 million";
-				TobiBotInformation.document.getElementById("tM2").innerHTML = "You already reached 1 billion";
+				timeM = pretiffyTime(Math.round((1000000000000-CBAT)/cps));
+				timeM2 = pretiffyTime(Math.round((1000000000000000-CBAT)/cps));
+				timeM3 = pretiffyTime(Math.round((1000000000000000000-CBAT)/cps));
+				M1 = "Trillion";
+				M2 = "Quadrillion";
+				M3 = "Quintillion";	
+				TobiBotInformation.document.getElementById("tM").innerHTML = timeM;
+				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM2;
 				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM3;				
 				}	
 				if (CBAT > 1000000000000){
-				TobiBotInformation.document.getElementById("tM").innerHTML = "You already reached 1 million";
-				TobiBotInformation.document.getElementById("tM2").innerHTML = "You already reached 1 billion";
-				TobiBotInformation.document.getElementById("tM3").innerHTML = "You already reached 1 trillion";				
+				timeM = pretiffyTime(Math.round((1000000000000000-CBAT)/cps));
+				timeM2 = pretiffyTime(Math.round((1000000000000000000-CBAT)/cps));
+				timeM3 = pretiffyTime(Math.round((1000000000000000000000-CBAT)/cps));
+				M1 = "Quadrillion";
+				M2 = "Quintillion";
+				M3 = "Sextillion";	
+				TobiBotInformation.document.getElementById("tM").innerHTML = timeM;
+				TobiBotInformation.document.getElementById("tM2").innerHTML = timeM2;
+				TobiBotInformation.document.getElementById("tM3").innerHTML = timeM3;				
 				}
 				TobiBotInformation.document.title = "TobiBot Information Window";
 	}
