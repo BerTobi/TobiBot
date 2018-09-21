@@ -1,4 +1,4 @@
-/* Version 0.120 */
+/* Version 0.124 */
 
 	var btn = document.createElement("startButton");        // Create a <button> element
 	btn.id ='startButton';
@@ -6,7 +6,9 @@
 	btn.appendChild(t);                                // Append the text to <button>
 	document.body.appendChild(btn);
 	document.getElementById("startButton").onclick = function() {start()} ;
-	var cps = Cursors*0.2 + Grandmas*0.8 + Factories*4 + Mines*12.5 + Shipments*20 + Labs*125 + Portals*1332.2;
+
+	var grandmaGain=4
+	var cps = Cursors*0.2 + Grandmas*(grandmaGain/5) + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2;
 	var CBAT = Cookies;
 	var totalB = 0;
 	var nextB = "";
@@ -26,10 +28,10 @@
 		TobiBotInformation.document.write("Time left for 1 <span id="+"M1"+"></span>"+" CBAT: "+"<span id="+"tM"+"></span><br />");
 		TobiBotInformation.document.write("Time left for 1 <span id="+"M2"+"></span>"+" CBAT: "+"<span id="+"tM2"+"></span><br />");
 		TobiBotInformation.document.write("Time left for 1 <span id="+"M3"+"></span>"+" CBAT: "+"<span id="+"tM3"+"></span><br />");
-		TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.120</footer>");
+		TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.124 Beta 1</footer>");
 		TobiBotInformation.document.title = "TobiBot Information Window";
 		var cursorROI=Buyables['Cursor'].price/0.2;
-		var grandmaROI=Buyables['Grandma'].price/0.8;
+		var grandmaROI=Buyables['Grandma'].price/(grandmaGain/5);
 		var factoryROI=Buyables['Factory'].price/4;
 		var mineROI=Buyables['Mine'].price/10;
 		var shipmentROI=Buyables['Shipment'].price/20;
@@ -85,7 +87,29 @@
 		}
 	}
 	updateInformationWindow=function(){
-				cps = Cursors*0.2 + Grandmas*0.8 + Factories*4 + Mines*12.5 + Shipments*20 + Labs*125 + Portals*1332.2;
+				if (Pledge==0)cps = Cursors*0.2 + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2;
+				if (Pledge>0)cps = Cursors*(Cursors*2) + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2;
+				if (Factories<1) grandmaGain=4;
+				else {
+				if (Mines<1) grandmaGain=5;
+				else {
+					if (Shipments<1) grandmaGain=7;
+					else{
+						if (Labs<1) grandmaGain=10;
+						else{
+							if (Portals<1) grandmaGain=14;
+							else {
+							if (Pledge==0) grandmaGain=19;
+							else {
+								grandmaGain=Math.Ceil(19+(Portals*0.5));
+							}
+							}
+							
+						}
+					}
+				}
+				}
+				
 				CBAT = CBAT + cps/3.33;
 				nextB = selectBestROI();
 				timeL = pretiffyTime((Buyables[selectBestROI()].price-Cookies)/cps);
@@ -154,8 +178,9 @@
 			selectBestROI();
 					if (Cookies>Buyables[selectBestROI()].price){
 					Buyables[selectBestROI()].Buy();
-					cursorROI=Buyables['Cursor'].price/0.2;
-					grandmaROI=Buyables['Grandma'].price/0.8;
+					if (Pledge==0)cursorROI=Buyables['Cursor'].price/0.2;
+					if (Pledge>0)cursorROI=Buyables['Cursor'].price/(Cursors*(Cursors*2));
+					grandmaROI=Buyables['Grandma'].price/(grandmaGain/5);
 					factoryROI=Buyables['Factory'].price/4;
 					mineROI=Buyables['Mine'].price/12.5;
 					shipmentROI=Buyables['Shipment'].price/20;
