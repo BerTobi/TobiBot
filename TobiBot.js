@@ -1,4 +1,4 @@
-/* Version 0.125 */
+/* Version 0.1251 */
 
 	var btn = document.createElement("startButton");        // Create a <button> element
 	btn.id ='startButton';
@@ -25,12 +25,12 @@
 		TobiBotInformation.document.write("Cookies baked all time: "+"<span id="+"CBAT"+">0</span><br />");
 		TobiBotInformation.document.write("Total Buildings: "+"<span id="+"tB"+">0</span><br />");
 		TobiBotInformation.document.write("Next Building: "+"<span id="+"nB"+"></span><br />");
-		TobiBotInformation.document.write("ROI: "+"<span id="+"ROI"+"></span><br />");
+		TobiBotInformation.document.write("Efficiency: "+"<span id="+"ROI"+"></span><br />");
 		TobiBotInformation.document.write("Time left: "+"<span id="+"tL"+"></span><br />");
 		TobiBotInformation.document.write("Time left for 1 <span id="+"M1"+"></span>"+" CBAT: "+"<span id="+"tM"+"></span><br />");
 		TobiBotInformation.document.write("Time left for 1 <span id="+"M2"+"></span>"+" CBAT: "+"<span id="+"tM2"+"></span><br />");
 		TobiBotInformation.document.write("Time left for 1 <span id="+"M3"+"></span>"+" CBAT: "+"<span id="+"tM3"+"></span><br />");
-		TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.125</footer>");
+		TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.1251</footer>");
 		TobiBotInformation.document.title = "TobiBot Information Window";
 		var cursorROI=Buyables['Cursor'].price/0.2;
 		var grandmaROI=Buyables['Grandma'].price/(grandmaGain/5);
@@ -208,15 +208,15 @@
 			selectBestROI();
 					if (Cookies>Buyables[selectBestROI()].price){
 					Buyables[selectBestROI()].Buy();
-					if (Pledge==0)cursorROI=Buyables['Cursor'].price/0.2;
-					if (Pledge>0)cursorROI=Buyables['Cursor'].price/(Math.ceil(Cursors*1.5)/5);
-					grandmaROI=Buyables['Grandma'].price/(grandmaGain/5);
-					factoryROI=Buyables['Factory'].price/4;
-					mineROI=Buyables['Mine'].price/12.5;
-					shipmentROI=Buyables['Shipment'].price/20;
-					labROI=Buyables['Alchemy lab'].price/125;
-					portalROI=Buyables['Portal'].price/1332.2;
-					timeROI=Buyables['Time machine'].price/26691.2;
+					if (Pledge==0)cursorROI=Buyables['Cursor'].price/cps + Buyables['Cursor'].price/0.2;
+					if (Pledge>0)cursorROI=Buyables['Cursor'].price/cps + Buyables['Cursor'].price/(Math.ceil(Cursors*1.5)/5);
+					grandmaROI=Buyables['Grandma'].price/cps + Buyables['Grandma'].price/(grandmaGain/5);
+					factoryROI=Buyables['Factory'].price/cps + Buyables['Factory'].price/4;
+					mineROI=Buyables['Mine'].price/cps + Buyables['Mine'].price/12.5;
+					shipmentROI=Buyables['Shipment'].price/cps + Buyables['Shipment'].price/20;
+					labROI=Buyables['Alchemy lab'].price/cps + Buyables['Alchemy lab'].price/125;
+					portalROI=Buyables['Portal'].price/cps + Buyables['Portal'].price/1332.2;
+					timeROI=Buyables['Time machine'].price/cps + Buyables['Time machine'].price/26691.2;
 				new Pop('credits','<span style="color:#f00;">Next building:</span>'+selectBestROI());
 				}
 			updateInformationWindow();	
