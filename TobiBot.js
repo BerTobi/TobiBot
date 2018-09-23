@@ -105,7 +105,7 @@
 	}
 	updateInformationWindow=function(){
 				if (Pledge==0)cps = Cursors*0.2 + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2 + Times*24691.2;
-				if (Pledge>0)cps = Math.ceil(Cursors*(Cursors*1.5)) + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2 + Times*24691.2;
+				if (Pledge>0)cps = Math.ceil(Cursors*(Cursors*1.5))/5 + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2 + Times*24691.2;
 				if (Factories<1) grandmaGain=4;
 				else {
 				if (Mines<1) grandmaGain=5;
@@ -209,7 +209,7 @@
 					if (Cookies>Buyables[selectBestROI()].price){
 					Buyables[selectBestROI()].Buy();
 					if (Pledge==0)cursorROI=Buyables['Cursor'].price/0.2;
-					if (Pledge>0)cursorROI=Buyables['Cursor'].price/(Cursors*(Cursors*2));
+					if (Pledge>0)cursorROI=Buyables['Cursor'].price/(Math.ceil(Cursors*1.5)/5);
 					grandmaROI=Buyables['Grandma'].price/(grandmaGain/5);
 					factoryROI=Buyables['Factory'].price/4;
 					mineROI=Buyables['Mine'].price/12.5;
