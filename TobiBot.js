@@ -17,14 +17,26 @@ var timeM = 0;
 var nextMilestone = 1;
 var nextOoM = 1;
 var totalTime = 0;
+var ROI = 0;
+var Eff = 0;
+var avgCpsAT = 0;
+var avgCps = 0;
+var sum = 0;
+
+const cpsLog = [];
+var cpsIndex = 0;
 
 start=function() {
 	var TobiBotInformation = window.open("", "MsgWindow", "width=600,height=300,addressbar=no, location=no");
 	TobiBotInformation.document.write("<h2>TobiBot Information Window</h2>"+"CpS: "+"<span id="+"showCpS"+">0</span><br />");
+	TobiBotInformation.document.write("Average CpS (All time): " + "<span id=" + "averageCpSAT" + "></span><br />");
+	TobiBotInformation.document.write("Average CpS (Last minute): " + "<span id=" + "averageCpS" + "></span><br />");
 	TobiBotInformation.document.write("Total time played: "+"<span id="+"totalTime"+">0</span><br />");
 	TobiBotInformation.document.write("Cookies baked all time: "+"<span id="+"CBAT"+">0</span><br />");
 	TobiBotInformation.document.write("Total Buildings: "+"<span id="+"tB"+">0</span><br />");
 	TobiBotInformation.document.write("Next Building: "+"<span id="+"nB"+"></span><br />");
+	TobiBotInformation.document.write("ROI: " + "<span id=" + "ROI" + "></span><br />");
+	TobiBotInformation.document.write("Efficiency: " + "<span id=" + "Eff" + "></span><br />");
 	TobiBotInformation.document.write("Time left for next Buy: "+"<span id="+"tL"+"></span><br />");
 	TobiBotInformation.document.write("Time left for next OoM (<span id="+"nextOoM"+"></span>"+") CBAT: "+"<span id="+"timeOoM"+"></span><br />");
 	TobiBotInformation.document.write("Time left for next Milestone (<span id="+"nextMilestone"+"></span>"+") CBAT: "+"<span id="+"timeMilestone"+"></span><br />");
@@ -38,6 +50,14 @@ start=function() {
 	var shipmentROI = Buyables['Shipment'].price/20;
 	var labROI = Buyables['Alchemy lab'].price/100;
 	var portalROI = Buyables['Portal'].price/1332.2;
+
+	var cursorEff = Buyables['Cursor'].price / cps + Buyables['Cursor'].price / 0.2;
+	var grandmaEff = Buyables['Grandma'].price / cps + Buyables['Grandma'].price / (grandmaGain / 5);
+	var factoryEff = Buyables['Factory'].price / cps + Buyables['Factory'].price / 4;
+	var mineEff = Buyables['Mine'].price / cps + Buyables['Mine'].price / 10;
+	var shipmentEff = Buyables['Shipment'].price / cps + Buyables['Shipment'].price / 20;
+	var labEff = Buyables['Alchemy lab'].price / cps + Buyables['Alchemy lab'].price / 100;
+	var portalEff = Buyables['Portal'].price / cps + Buyables['Portal'].price / 1332.2;
 pretiffyTime=function(a){
 	var seconds = 0;
 	var minutes = 0;
@@ -92,20 +112,106 @@ pretiffyTime=function(a){
 	
 	return time;
 }
-standardNotation = function(number) {
+standardMilestones = function(number) {
 	var prefix;
 
-	if(number == 1000) prefix = "Thousand";
-	if(number == 1000000) prefix = "Million";
-	if(number == 1000000000) prefix = "Billion";
-	if(number == 1000000000000) prefix = "Trillion";
-	if(number == 1000000000000000) prefix = "Quadrillion";
-	if(number == 1000000000000000000) prefix = "Quintillion";
-	if(number == 1000000000000000000000) prefix = "Sextillion";
-	if(number == 1000000000000000000000000) prefix = "Septillion";
+	if(number == Math.pow(10, 3)) prefix = "Thousand";
+	if(number == Math.pow(10, 6)) prefix = "Million";
+	if(number == Math.pow(10, 9)) prefix = "Billion";
+	if(number == Math.pow(10, 12)) prefix = "Trillion";
+	if(number == Math.pow(10, 15)) prefix = "Quadrillion";
+	if(number == Math.pow(10, 18)) prefix = "Quintillion";
+	if(number == Math.pow(10, 21)) prefix = "Sextillion";
+	if(number == Math.pow(10, 24)) prefix = "Septillion";
 
 	return prefix;
 }
+
+standardNotation = function(number) {
+	var prefix = "";
+
+	if(number > Math.pow(10, 3) && number < Math.pow(10, 6)) {
+		number = number / Math.pow(10, 3);
+		prefix = "Thousand";
+	} 
+	else if(number > Math.pow(10, 6) && number < Math.pow(10, 9)) {
+		number = number / Math.pow(10, 6);
+		prefix = "Million";
+	} 
+	else if(number > Math.pow(10, 9) && number < Math.pow(10, 12)) {
+		number = number / Math.pow(10, 9);
+		prefix = "Billion";
+	}
+	else if(number > Math.pow(10, 12) && number < Math.pow(10, 15)) {
+		number = number / Math.pow(10, 12);
+		prefix = "Trillion";
+	}
+	else if(number > Math.pow(10, 15) && number < Math.pow(10, 18)) {
+		number = number / Math.pow(10, 15);
+		prefix = "Quadrillion";
+	}
+	else if(number > Math.pow(10, 18) && number < Math.pow(10, 21)) {
+		number = number / Math.pow(10, 18);
+		prefix = "Quintillion";
+	}
+	else if(number > Math.pow(10, 21) && number < Math.pow(10, 24)) {
+		number = number / Math.pow(10, 21);
+		prefix = "Sextillion";
+	}
+	else if(number > Math.pow(10, 24)) {
+		number = number / Math.pow(10, 24);
+		prefix = "Septillion";
+	}
+
+
+	var notatedNumber = number.toFixed(2) + " " + prefix;
+	return notatedNumber;
+}
+
+calculateROI=function(){
+	if (Pledge==0)cursorROI=Buyables['Cursor'].price/0.2;
+	if (Pledge>0)cursorROI=Buyables['Cursor'].price/(Cursors*2);
+	grandmaROI=Buyables['Grandma'].price/(grandmaGain/5);
+	factoryROI=Buyables['Factory'].price/4;
+	mineROI=Buyables['Mine'].price/12.5;
+	shipmentROI=Buyables['Shipment'].price/20;
+	labROI=Buyables['Alchemy lab'].price/125;
+	portalROI=Buyables['Portal'].price/1332.2;
+}
+
+calculateEff=function(){
+	cursorEff = Buyables['Cursor'].price / cps + Buyables['Cursor'].price / 0.2;
+	grandmaEff = Buyables['Grandma'].price / cps + Buyables['Grandma'].price / (grandmaGain / 5);
+	factoryEff = Buyables['Factory'].price / cps + Buyables['Factory'].price / 4;
+	mineEff = Buyables['Mine'].price / cps + Buyables['Mine'].price / 10;
+	shipmentEff = Buyables['Shipment'].price / cps + Buyables['Shipment'].price / 20;
+	labEff = Buyables['Alchemy lab'].price / cps + Buyables['Alchemy lab'].price / 100;
+	portalEff = Buyables['Portal'].price / cps + Buyables['Portal'].price / 1332.2;
+}
+selectBestEff=function(){
+	if (cursorEff<=grandmaEff && cursorEff<=factoryEff && cursorEff<=mineEff  && cursorEff<=shipmentEff  && cursorEff<=labEff  && cursorEff<=portalEff){
+		return 'Cursor';
+	}
+	if (grandmaEff<=cursorEff && grandmaEff<=factoryEff && grandmaEff<=mineEff  && grandmaEff<=shipmentEff  && grandmaEff<=labEff  && grandmaEff<=portalEff){
+		return 'Grandma';
+	}
+	if (factoryEff<=grandmaEff && factoryEff<=cursorEff && factoryEff<=mineEff  && factoryEff<=shipmentEff  && factoryEff<=labEff  && factoryEff<=portalEff){
+		return 'Factory';
+	}
+	if (mineEff<=grandmaEff && mineEff<=factoryEff && mineEff<=cursorEff  && mineEff<=shipmentEff  && mineEff<=labEff  && mineEff<=portalEff){
+		return 'Mine';
+	}
+	if (shipmentEff<=grandmaEff && shipmentEff<=factoryEff && shipmentEff<=mineEff  && shipmentEff<=cursorEff  && shipmentEff<=labEff  && shipmentEff<=portalEff){
+		return 'Shipment';
+	}
+	if (labEff<=grandmaEff && labEff<=factoryEff && labEff<=mineEff  && labEff<=shipmentEff  && labEff<=cursorEff  && labEff<=portalEff){
+		return 'Alchemy lab';
+	}
+	if (portalEff<=grandmaEff && portalEff<=factoryEff && portalEff<=mineEff  && portalEff<=shipmentEff  && portalEff<=labEff  && portalEff<=cursorEff){
+		return 'Portal';
+	}
+}
+
 selectBestROI=function(){
 	if (cursorROI<=grandmaROI && cursorROI<=factoryROI && cursorROI<=mineROI  && cursorROI<=shipmentROI  && cursorROI<=labROI  && cursorROI<=portalROI){
 		return 'Cursor';
@@ -129,6 +235,7 @@ selectBestROI=function(){
 		return 'Portal';
 	}
 }
+
 updateInformationWindow=function(){
 			totalTime += 0.3;
 			if (Pledge==0)cps = Cursors*0.2 + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2;
@@ -145,7 +252,7 @@ updateInformationWindow=function(){
 						else {
 						if (Pledge==0) grandmaGain=19;
 						else {
-							grandmaGain=Math.Ceil(19+(Portals*0.5));
+							grandmaGain=Math.ceil(19+(Portals*0.5));
 						}
 						}
 						
@@ -157,16 +264,52 @@ updateInformationWindow=function(){
 			CBAT = CBAT + cps/3.33;
 			nextBuilding = selectBestROI();
 			timeL = pretiffyTime((Buyables[selectBestROI()].price-Cookies)/cps);
+
+			if (selectBestEff()=='Cursor') {
+				ROI = cursorROI;
+				Eff = cursorEff;
+			} 
+			if (selectBestEff()=='Grandma') {
+				ROI = grandmaROI;
+				Eff = grandmaEff;
+			} 
+			if (selectBestEff()=='Factory') {
+				ROI = factoryROI;
+				Eff = factoryEff;
+			}
+			if (selectBestEff()=='Mine') {
+				ROI = mineROI;
+				Eff = mineEff;
+			} 
+			if (selectBestEff()=='Shipment') {
+				ROI = shipmentROI;
+				Eff = shipmentEff;
+			} 
+			if (selectBestEff()=='Alchemy lab') {
+				ROI = labROI;
+				Eff = labEff;
+			}
+			if (selectBestEff()=='Portal') {
+				ROI = portalROI;
+				Eff = portalEff;
+			} 
 			
 			totalBuildings = Cursors + Grandmas + Factories + Mines + Shipments + Labs + Portals
-			TobiBotInformation.document.getElementById("showCpS").innerHTML = Math.round(cps * 10) / 10;
-			TobiBotInformation.document.getElementById("CBAT").innerHTML = Math.round(CBAT*10) / 10;
+
+			avgCpsAT = CBAT / totalTime;
+
+			TobiBotInformation.document.getElementById("showCpS").innerHTML = standardNotation(cps);
+			TobiBotInformation.document.getElementById("CBAT").innerHTML = standardNotation(CBAT);
 			TobiBotInformation.document.getElementById("tB").innerHTML = totalBuildings;
 			TobiBotInformation.document.getElementById("nB").innerHTML = nextBuilding;
 			TobiBotInformation.document.getElementById("tL").innerHTML = timeL;
 			TobiBotInformation.document.getElementById("nextOoM").innerHTML = nextOoM.toExponential();
-			TobiBotInformation.document.getElementById("nextMilestone").innerHTML = standardNotation(nextMilestone);
+			TobiBotInformation.document.getElementById("nextMilestone").innerHTML = standardMilestones(nextMilestone);
 			TobiBotInformation.document.getElementById("totalTime").innerHTML = pretiffyTime(totalTime);
+			TobiBotInformation.document.getElementById("ROI").innerHTML = standardNotation(ROI);
+			TobiBotInformation.document.getElementById("Eff").innerHTML = standardNotation(Eff);
+			TobiBotInformation.document.getElementById("averageCpSAT").innerHTML = standardNotation(avgCpsAT);
+			TobiBotInformation.document.getElementById("averageCpS").innerHTML = standardNotation(avgCps);
 			if (CBAT < nextOoM) {
 				timeOoM = pretiffyTime(Math.round((nextOoM-CBAT)/cps));
 				TobiBotInformation.document.getElementById("timeOoM").innerHTML = timeOoM;				
@@ -195,19 +338,21 @@ updateInformationWindow=function(){
 		ClickCookie();
 		CBAT++;
 		selectBestROI();
-				if (Cookies>Buyables[selectBestROI()].price){
-				Buyables[selectBestROI()].Buy();
-				if (Pledge==0)cursorROI=Buyables['Cursor'].price/0.2;
-				if (Pledge>0)cursorROI=Buyables['Cursor'].price/(Cursors*(Cursors*2));
-				grandmaROI=Buyables['Grandma'].price/(grandmaGain/5);
-				factoryROI=Buyables['Factory'].price/4;
-				mineROI=Buyables['Mine'].price/12.5;
-				shipmentROI=Buyables['Shipment'].price/20;
-				labROI=Buyables['Alchemy lab'].price/125;
-				portalROI=Buyables['Portal'].price/1332.2;
-			new Pop('credits','<span style="color:#f00;">Next building:</span>'+selectBestROI());
-			}
-		updateInformationWindow();	
+		if (Cookies>Buyables[selectBestEff()].price){
+			Buyables[selectBestEff()].Buy();
+			calculateROI();
+			calculateEff();
+			new Pop('credits','<span style="color:#f00;">Next building:</span>'+selectBestEff());
+		}
+		updateInformationWindow();
+		cpsLog[cpsIndex] = cps;
+		cpsIndex++;
+		avgCps = cpsLog.reduce((a, b) => a + b, 0) / cpsLog.length;
+		if(cpsIndex == 200){
+			cpsIndex = 0;
+		}
+		
+
 	}, 300);
 	}
 	
