@@ -41,7 +41,7 @@ start=function() {
 	TobiBotInformation.document.write("Time left for next OoM (<span id="+"nextOoM"+"></span>"+") CBAT: "+"<span id="+"timeOoM"+"></span><br />");
 	TobiBotInformation.document.write("Time left for next Milestone (<span id="+"nextMilestone"+"></span>"+") CBAT: "+"<span id="+"timeMilestone"+"></span><br />");
 	TobiBotInformation.document.write("Time left for Googol CBAT: "+"<span id="+"timeGoogol"+"></span><br />");
-	TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.124 Beta 2</footer>");
+	TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.124 Final</footer>");
 	TobiBotInformation.document.title = "TobiBot Information Window";
 	var cursorROI = Buyables['Cursor'].price/0.2;
 	var grandmaROI = Buyables['Grandma'].price/(grandmaGain/5);
