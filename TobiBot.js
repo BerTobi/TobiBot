@@ -1,4 +1,4 @@
-/* Version 0.124 */
+/* Version 0.125 */
 
 var btn = document.createElement("startButton");        // Create a <button> element
 btn.id ='startButton';
@@ -8,7 +8,7 @@ document.body.appendChild(btn);
 document.getElementById("startButton").onclick = function() {start()} ;
 
 var grandmaGain = 4
-var cps = Cursors * 0.2 + Grandmas * (grandmaGain / 5) + Factories * 4 + Mines * 10 + Shipments * 20 + Labs * 100 + Portals * 1332.2;
+var cps = Cursors * 0.2 + Grandmas * (grandmaGain / 5) + Factories * 4 + Mines * 10 + Shipments * 20 + Labs * 100 + Portals * 1332.2 + Times * 24691.2;
 var CBAT = Cookies;
 var totalBuildings = 0;
 var nextBuilding = "";
@@ -41,15 +41,16 @@ start=function() {
 	TobiBotInformation.document.write("Time left for next OoM (<span id="+"nextOoM"+"></span>"+") CBAT: "+"<span id="+"timeOoM"+"></span><br />");
 	TobiBotInformation.document.write("Time left for next Milestone (<span id="+"nextMilestone"+"></span>"+") CBAT: "+"<span id="+"timeMilestone"+"></span><br />");
 	TobiBotInformation.document.write("Time left for Googol CBAT: "+"<span id="+"timeGoogol"+"></span><br />");
-	TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.124 Final</footer>");
+	TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.125 Alpha</footer>");
 	TobiBotInformation.document.title = "TobiBot Information Window";
-	var cursorROI = Buyables['Cursor'].price/0.2;
-	var grandmaROI = Buyables['Grandma'].price/(grandmaGain/5);
-	var factoryROI = Buyables['Factory'].price/4;
-	var mineROI = Buyables['Mine'].price/10;
-	var shipmentROI = Buyables['Shipment'].price/20;
-	var labROI = Buyables['Alchemy lab'].price/100;
-	var portalROI = Buyables['Portal'].price/1332.2;
+	var cursorROI = Buyables['Cursor'].price / 0.2;
+	var grandmaROI = Buyables['Grandma'].price / (grandmaGain/5);
+	var factoryROI = Buyables['Factory'].price / 4;
+	var mineROI = Buyables['Mine'].price / 10;
+	var shipmentROI = Buyables['Shipment'].price / 20;
+	var labROI = Buyables['Alchemy lab'].price / 100;
+	var portalROI = Buyables['Portal'].price / 1332.2;
+	var timeROI = Buyables['Time machine'].price / 24691.2;
 
 	var cursorEff = Buyables['Cursor'].price / cps + Buyables['Cursor'].price / 0.2;
 	var grandmaEff = Buyables['Grandma'].price / cps + Buyables['Grandma'].price / (grandmaGain / 5);
@@ -58,6 +59,8 @@ start=function() {
 	var shipmentEff = Buyables['Shipment'].price / cps + Buyables['Shipment'].price / 20;
 	var labEff = Buyables['Alchemy lab'].price / cps + Buyables['Alchemy lab'].price / 100;
 	var portalEff = Buyables['Portal'].price / cps + Buyables['Portal'].price / 1332.2;
+	var timeEff = Buyables['Time machine'].price / cps + Buyables['Time machine'].price / 24691.2;
+
 pretiffyTime=function(a){
 	var seconds = 0;
 	var minutes = 0;
@@ -169,14 +172,15 @@ standardNotation = function(number) {
 }
 
 calculateROI=function(){
-	if (Pledge==0)cursorROI=Buyables['Cursor'].price/0.2;
-	if (Pledge>0)cursorROI=Buyables['Cursor'].price/(Cursors*2);
-	grandmaROI=Buyables['Grandma'].price/(grandmaGain/5);
-	factoryROI=Buyables['Factory'].price/4;
-	mineROI=Buyables['Mine'].price/12.5;
-	shipmentROI=Buyables['Shipment'].price/20;
-	labROI=Buyables['Alchemy lab'].price/125;
-	portalROI=Buyables['Portal'].price/1332.2;
+	if (Pledge==0)cursorROI=Buyables['Cursor'].price / 0.2;
+	if (Pledge>0)cursorROI=Buyables['Cursor'].price / (Cursors*2);
+	grandmaROI=Buyables['Grandma'].price / (grandmaGain/5);
+	factoryROI=Buyables['Factory'].price / 4;
+	mineROI=Buyables['Mine'].price / 12.5;
+	shipmentROI=Buyables['Shipment'].price / 20;
+	labROI=Buyables['Alchemy lab'].price / 125;
+	portalROI=Buyables['Portal'].price / 1332.2;
+	timeROI = Buyables['Time machine'].price / 24691.2;
 }
 
 calculateEff=function(){
@@ -187,52 +191,59 @@ calculateEff=function(){
 	shipmentEff = Buyables['Shipment'].price / cps + Buyables['Shipment'].price / 20;
 	labEff = Buyables['Alchemy lab'].price / cps + Buyables['Alchemy lab'].price / 100;
 	portalEff = Buyables['Portal'].price / cps + Buyables['Portal'].price / 1332.2;
+	timeEff = Buyables['Time machine'].price / cps + Buyables['Time machine'].price / 24691.2;
 }
 selectBestEff=function(){
-	if (cursorEff<=grandmaEff && cursorEff<=factoryEff && cursorEff<=mineEff  && cursorEff<=shipmentEff  && cursorEff<=labEff  && cursorEff<=portalEff){
+	if (cursorEff<=grandmaEff && cursorEff<=factoryEff && cursorEff<=mineEff  && cursorEff<=shipmentEff  && cursorEff<=labEff  && cursorEff<=portalEff && cursorEff<=timeEff){
 		return 'Cursor';
 	}
-	if (grandmaEff<=cursorEff && grandmaEff<=factoryEff && grandmaEff<=mineEff  && grandmaEff<=shipmentEff  && grandmaEff<=labEff  && grandmaEff<=portalEff){
+	if (grandmaEff<=cursorEff && grandmaEff<=factoryEff && grandmaEff<=mineEff  && grandmaEff<=shipmentEff  && grandmaEff<=labEff  && grandmaEff<=portalEff && grandmaEff<=timeEff){
 		return 'Grandma';
 	}
-	if (factoryEff<=grandmaEff && factoryEff<=cursorEff && factoryEff<=mineEff  && factoryEff<=shipmentEff  && factoryEff<=labEff  && factoryEff<=portalEff){
+	if (factoryEff<=grandmaEff && factoryEff<=cursorEff && factoryEff<=mineEff  && factoryEff<=shipmentEff  && factoryEff<=labEff  && factoryEff<=portalEff && factoryEff<=timeEff){
 		return 'Factory';
 	}
-	if (mineEff<=grandmaEff && mineEff<=factoryEff && mineEff<=cursorEff  && mineEff<=shipmentEff  && mineEff<=labEff  && mineEff<=portalEff){
+	if (mineEff<=grandmaEff && mineEff<=factoryEff && mineEff<=cursorEff  && mineEff<=shipmentEff  && mineEff<=labEff  && mineEff<=portalEff && mineEff<=timeEff){
 		return 'Mine';
 	}
-	if (shipmentEff<=grandmaEff && shipmentEff<=factoryEff && shipmentEff<=mineEff  && shipmentEff<=cursorEff  && shipmentEff<=labEff  && shipmentEff<=portalEff){
+	if (shipmentEff<=grandmaEff && shipmentEff<=factoryEff && shipmentEff<=mineEff  && shipmentEff<=cursorEff  && shipmentEff<=labEff  && shipmentEff<=portalEff && shipmentEff<=timeEff){
 		return 'Shipment';
 	}
-	if (labEff<=grandmaEff && labEff<=factoryEff && labEff<=mineEff  && labEff<=shipmentEff  && labEff<=cursorEff  && labEff<=portalEff){
+	if (labEff<=grandmaEff && labEff<=factoryEff && labEff<=mineEff  && labEff<=shipmentEff  && labEff<=cursorEff  && labEff<=portalEff && labEff<=timeEff){
 		return 'Alchemy lab';
 	}
-	if (portalEff<=grandmaEff && portalEff<=factoryEff && portalEff<=mineEff  && portalEff<=shipmentEff  && portalEff<=labEff  && portalEff<=cursorEff){
+	if (portalEff<=grandmaEff && portalEff<=factoryEff && portalEff<=mineEff  && portalEff<=shipmentEff  && portalEff<=labEff  && portalEff<=cursorEff && portalEff<=timeEff){
 		return 'Portal';
+	}
+	if (timeEff<=grandmaEff && timeEff<=factoryEff && timeEff<=mineEff  && timeEff<=shipmentEff  && timeEff<=labEff  && timeEff<=cursorEff && timeEff<=portalEff){
+		return 'Time machine';
 	}
 }
 
 selectBestROI=function(){
-	if (cursorROI<=grandmaROI && cursorROI<=factoryROI && cursorROI<=mineROI  && cursorROI<=shipmentROI  && cursorROI<=labROI  && cursorROI<=portalROI){
+	if (cursorROI<=grandmaROI && cursorROI<=factoryROI && cursorROI<=mineROI  && cursorROI<=shipmentROI  && cursorROI<=labROI  && cursorROI<=portalROI && cursorROI<=timeROI){
 		return 'Cursor';
 	}
-	if (grandmaROI<=cursorROI && grandmaROI<=factoryROI && grandmaROI<=mineROI  && grandmaROI<=shipmentROI  && grandmaROI<=labROI  && grandmaROI<=portalROI){
+	if (grandmaROI<=cursorROI && grandmaROI<=factoryROI && grandmaROI<=mineROI  && grandmaROI<=shipmentROI  && grandmaROI<=labROI  && grandmaROI<=portalROI && grandmaROI<=timeROI){
 		return 'Grandma';
 	}
-	if (factoryROI<=grandmaROI && factoryROI<=cursorROI && factoryROI<=mineROI  && factoryROI<=shipmentROI  && factoryROI<=labROI  && factoryROI<=portalROI){
+	if (factoryROI<=grandmaROI && factoryROI<=cursorROI && factoryROI<=mineROI  && factoryROI<=shipmentROI  && factoryROI<=labROI  && factoryROI<=portalROI && factoryROI<=timeROI){
 		return 'Factory';
 	}
-	if (mineROI<=grandmaROI && mineROI<=factoryROI && mineROI<=cursorROI  && mineROI<=shipmentROI  && mineROI<=labROI  && mineROI<=portalROI){
+	if (mineROI<=grandmaROI && mineROI<=factoryROI && mineROI<=cursorROI  && mineROI<=shipmentROI  && mineROI<=labROI  && mineROI<=portalROI && mineROI<=timeROI){
 		return 'Mine';
 	}
-	if (shipmentROI<=grandmaROI && shipmentROI<=factoryROI && shipmentROI<=mineROI  && shipmentROI<=cursorROI  && shipmentROI<=labROI  && shipmentROI<=portalROI){
+	if (shipmentROI<=grandmaROI && shipmentROI<=factoryROI && shipmentROI<=mineROI  && shipmentROI<=cursorROI  && shipmentROI<=labROI  && shipmentROI<=portalROI && shipmentROI<=timeROI){
 		return 'Shipment';
 	}
-	if (labROI<=grandmaROI && labROI<=factoryROI && labROI<=mineROI  && labROI<=shipmentROI  && labROI<=cursorROI  && labROI<=portalROI){
+	if (labROI<=grandmaROI && labROI<=factoryROI && labROI<=mineROI  && labROI<=shipmentROI  && labROI<=cursorROI  && labROI<=portalROI && labROI<=timeROI){
 		return 'Alchemy lab';
 	}
-	if (portalROI<=grandmaROI && portalROI<=factoryROI && portalROI<=mineROI  && portalROI<=shipmentROI  && portalROI<=labROI  && portalROI<=cursorROI){
+	if (portalROI<=grandmaROI && portalROI<=factoryROI && portalROI<=mineROI  && portalROI<=shipmentROI  && portalROI<=labROI  && portalROI<=cursorROI && portalROI<=timeROI){
 		return 'Portal';
+	}
+	if (timeROI<=grandmaROI && timeROI<=factoryROI && timeROI<=mineROI  && timeROI<=shipmentROI  && timeROI<=labROI  && timeROI<=cursorROI && timeROI<=portalROI){
+		return 'Time machine';
 	}
 }
 
@@ -293,8 +304,12 @@ updateInformationWindow=function(){
 				ROI = portalROI;
 				Eff = portalEff;
 			} 
+			if (selectBestEff()=='Time machine') {
+				ROI = timeROI;
+				Eff = timeEff;
+			} 
 			
-			totalBuildings = Cursors + Grandmas + Factories + Mines + Shipments + Labs + Portals
+			totalBuildings = Cursors + Grandmas + Factories + Mines + Shipments + Labs + Portals + Times
 
 			avgCpsAT = CBAT / totalTime;
 
