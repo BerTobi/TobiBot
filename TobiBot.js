@@ -16,12 +16,14 @@ var timeL = 0;
 var timeM = 0;
 var nextMilestone = 1;
 var nextOoM = 1;
+var OoMs = 1;
 var totalTime = 0;
 var ROI = 0;
 var Eff = 0;
 var avgCpsAT = 0;
 var avgCps = 0;
 var sum = 0;
+var avgOoM = 0;
 
 const cpsLog = [];
 var cpsIndex = 0;
@@ -33,15 +35,17 @@ start=function() {
 	TobiBotInformation.document.write("Average CpS (Last minute): " + "<span id=" + "averageCpS" + "></span><br />");
 	TobiBotInformation.document.write("Total time played: "+"<span id="+"totalTime"+">0</span><br />");
 	TobiBotInformation.document.write("Cookies baked all time: "+"<span id="+"CBAT"+">0</span><br />");
-	TobiBotInformation.document.write("Total Buildings: "+"<span id="+"tB"+">0</span><br />");
+	TobiBotInformation.document.write("Total Buildings: "+"<span id="+"tB"+">0</span><br /><br />");
 	TobiBotInformation.document.write("Next Building: "+"<span id="+"nB"+"></span><br />");
 	TobiBotInformation.document.write("ROI: " + "<span id=" + "ROI" + "></span><br />");
 	TobiBotInformation.document.write("Efficiency: " + "<span id=" + "Eff" + "></span><br />");
-	TobiBotInformation.document.write("Time left for next Buy: "+"<span id="+"tL"+"></span><br />");
+	TobiBotInformation.document.write("Time left for next Buy: "+"<span id="+"tL"+"></span><br /><br />");
 	TobiBotInformation.document.write("Time left for next OoM (<span id="+"nextOoM"+"></span>"+") CBAT: "+"<span id="+"timeOoM"+"></span><br />");
+	TobiBotInformation.document.write("Average OoM gain: 1 OoM every: " + "<span id=" + "avgOoM" + "></span><br />");
 	TobiBotInformation.document.write("Time left for next Milestone (<span id="+"nextMilestone"+"></span>"+") CBAT: "+"<span id="+"timeMilestone"+"></span><br />");
-	TobiBotInformation.document.write("Time left for Googol CBAT: "+"<span id="+"timeGoogol"+"></span><br />");
-	TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.125 Alpha</footer>");
+	TobiBotInformation.document.write("Time left for Googol CBAT (according to production): "+"<span id="+"timeGoogol"+"></span><br />");
+	TobiBotInformation.document.write("Time left for Googol CBAT (according to OoM gain): "+"<span id="+"timeGoogolOoM"+"></span><br />");
+	TobiBotInformation.document.write("<br /><br /><br /><footer>Version 0.125 Beta 1</footer>");
 	TobiBotInformation.document.title = "TobiBot Information Window";
 	var cursorROI = Buyables['Cursor'].price / 0.2;
 	var grandmaROI = Buyables['Grandma'].price / (grandmaGain/5);
@@ -173,7 +177,7 @@ standardNotation = function(number) {
 
 calculateROI=function(){
 	if (Pledge==0)cursorROI=Buyables['Cursor'].price / 0.2;
-	if (Pledge>0)cursorROI=Buyables['Cursor'].price / (Cursors*2);
+	if (Pledge>0)cursorROI=Buyables['Cursor'].price / (Cursors*1.5);
 	grandmaROI=Buyables['Grandma'].price / (grandmaGain/5);
 	factoryROI=Buyables['Factory'].price / 4;
 	mineROI=Buyables['Mine'].price / 12.5;
@@ -249,8 +253,8 @@ selectBestROI=function(){
 
 updateInformationWindow=function(){
 			totalTime += 0.3;
-			if (Pledge==0)cps = Cursors*0.2 + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2;
-			if (Pledge>0)cps = Cursors*(Cursors*2) + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2;
+			if (Pledge==0)cps = Cursors*0.2 + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2 + Times * 24691.2;
+			if (Pledge>0)cps = (Cursors*1.5) + Grandmas*grandmaGain/5 + Factories*4 + Mines*10 + Shipments*20 + Labs*100 + Portals*1332.2 + Times * 24691.2;
 			if (Factories<1) grandmaGain=4;
 			else {
 			if (Mines<1) grandmaGain=5;
@@ -313,6 +317,8 @@ updateInformationWindow=function(){
 
 			avgCpsAT = CBAT / totalTime;
 
+			avgOoM = totalTime / OoMs;
+
 			TobiBotInformation.document.getElementById("showCpS").innerHTML = standardNotation(cps);
 			TobiBotInformation.document.getElementById("CBAT").innerHTML = standardNotation(CBAT);
 			TobiBotInformation.document.getElementById("tB").innerHTML = totalBuildings;
@@ -325,12 +331,14 @@ updateInformationWindow=function(){
 			TobiBotInformation.document.getElementById("Eff").innerHTML = standardNotation(Eff);
 			TobiBotInformation.document.getElementById("averageCpSAT").innerHTML = standardNotation(avgCpsAT);
 			TobiBotInformation.document.getElementById("averageCpS").innerHTML = standardNotation(avgCps);
+			TobiBotInformation.document.getElementById("avgOoM").innerHTML = pretiffyTime(avgOoM);
 			if (CBAT < nextOoM) {
 				timeOoM = pretiffyTime(Math.round((nextOoM-CBAT)/cps));
 				TobiBotInformation.document.getElementById("timeOoM").innerHTML = timeOoM;				
 			}
 			else if (CBAT > nextOoM) {
 				nextOoM = nextOoM * 10;
+				OoMs += 1;
 			}
 			if (CBAT < nextMilestone) {
 				timeMilestone = pretiffyTime(Math.round((nextMilestone-CBAT)/cps));
@@ -343,6 +351,10 @@ updateInformationWindow=function(){
 			var timeGoogol = Math.round((Math.pow(10, 100) - CBAT) / cps); 
 			timeGoogol = pretiffyTime(timeGoogol);
 			TobiBotInformation.document.getElementById("timeGoogol").innerHTML = timeGoogol;
+
+			var timeGoogolOoM = avgOoM * (100 - OoMs);
+			timeGoogolOoM = pretiffyTime(timeGoogolOoM);
+			TobiBotInformation.document.getElementById("timeGoogolOoM").innerHTML = timeGoogolOoM;
 
 			TobiBotInformation.document.title = "TobiBot Information Window";
 }
